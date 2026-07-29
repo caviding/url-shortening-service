@@ -1,10 +1,12 @@
 package com.caviding.urlshorteningservice.service;
 
+import com.caviding.urlshorteningservice.exception.UrlNotFoundException;
 import com.caviding.urlshorteningservice.dto.CreateUrlRequest;
 import com.caviding.urlshorteningservice.dto.UrlResponse;
 import com.caviding.urlshorteningservice.entity.Url;
 import com.caviding.urlshorteningservice.repository.UrlRepository;
 import com.caviding.urlshorteningservice.util.ShortCodeGenerator;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,13 +19,14 @@ import java.util.List;
 public class UrlService {
 
     private final UrlRepository urlRepository;
+    private final ShortCodeGenerator shortCodeGenerator;
 
     public UrlResponse createUrl(CreateUrlRequest request) {
 
-        String shortCode = ShortCodeGenerator.generate();
+        String shortCode = shortCodeGenerator.generate();
 
         while(urlRepository.existsByShortCode(shortCode)){
-            shortCode = ShortCodeGenerator.generate();
+            shortCode = shortCodeGenerator.generate();
         }
 
         Url url = new Url();
@@ -45,9 +48,10 @@ public class UrlService {
         return response;
     }
 
+    @Transactional
     public String redirect(String shortCode){
         Url url = urlRepository.findByShortCode(shortCode)
-                .orElseThrow(() -> new RuntimeException("Short code not found"));
+                .orElseThrow(() -> new UrlNotFoundException("Url code not found"));
         url.setClickCount(url.getClickCount() + 1);
         url.setUpdatedAt(LocalDateTime.now());
         urlRepository.save(url);
@@ -57,7 +61,7 @@ public class UrlService {
 
     public UrlResponse getUrlById(Long id){
         Url url = urlRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Url not found"));
+                .orElseThrow(() -> new UrlNotFoundException("Url not found"));
 
         return UrlResponse.builder()
                 .id(url.getId())

@@ -1,6 +1,7 @@
 package com.caviding.urlshorteningservice.entity;
 
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

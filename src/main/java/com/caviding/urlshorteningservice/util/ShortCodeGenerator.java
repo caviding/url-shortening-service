@@ -1,7 +1,10 @@
 package com.caviding.urlshorteningservice.util;
 
+import org.springframework.stereotype.Component;
+
 import java.security.SecureRandom;
 
+@Component
 public class ShortCodeGenerator {
 
     private static final String BASE62 =
@@ -11,7 +14,7 @@ public class ShortCodeGenerator {
 
     private static final SecureRandom RANDOM = new SecureRandom();
 
-    public static String generate() {
+    public String generate() {
         StringBuilder shortCode = new StringBuilder(LENGTH);
 
         for (int i = 0; i < LENGTH; i++) {
