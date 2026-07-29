@@ -6,10 +6,11 @@ import com.caviding.urlshorteningservice.entity.Url;
 import com.caviding.urlshorteningservice.repository.UrlRepository;
 import com.caviding.urlshorteningservice.util.ShortCodeGenerator;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -52,6 +53,35 @@ public class UrlService {
         urlRepository.save(url);
 
         return url.getOriginalUrl();
+    }
+
+    public UrlResponse getUrlById(Long id){
+        Url url = urlRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Url not found"));
+
+        return UrlResponse.builder()
+                .id(url.getId())
+                .originalUrl(url.getOriginalUrl())
+                .shortCode(url.getShortCode())
+                .shortUrl("http://localhost:8080/" + url.getShortCode())
+                .clickCount(url.getClickCount())
+                .build();
+    }
+
+    public List<UrlResponse> getAllUrls() {
+        List<Url> urls = urlRepository.findAll();
+        List<UrlResponse> urlResponse = new ArrayList<>();
+        for (Url u : urls) {
+            UrlResponse response = UrlResponse.builder()
+                    .id(u.getId())
+                    .originalUrl(u.getOriginalUrl())
+                    .shortCode(u.getShortCode())
+                    .shortUrl("http://localhost:8080/" + u.getShortCode())
+                    .clickCount(u.getClickCount())
+                    .build();
+            urlResponse.add(response);
+        }
+        return urlResponse;
     }
 
 

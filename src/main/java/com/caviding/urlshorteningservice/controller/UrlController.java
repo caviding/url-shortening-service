@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,6 +34,17 @@ public class UrlController {
                 .build();
     }
 
+    @GetMapping("/details/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<UrlResponse> getUrlById(@PathVariable Long id){
+        return ResponseEntity.ok(urlService.getUrlById(id));
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<UrlResponse>> getAllUrls(){
+        return ResponseEntity.ok(urlService.getAllUrls());
+    }
 
 
 }
