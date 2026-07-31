@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -37,5 +36,16 @@ public class UrlController {
         return ResponseEntity.ok(urlService.getAllUrls());
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUrl(@PathVariable Long id){
+        urlService.deleteUrl(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<UrlResponse> updateUrl(@PathVariable Long id, @RequestBody @Valid CreateUrlRequest request){
+        return ResponseEntity.ok(urlService.updateUrl(id, request));
+    }
 
 }
