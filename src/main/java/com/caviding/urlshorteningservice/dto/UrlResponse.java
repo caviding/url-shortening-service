@@ -12,12 +12,8 @@ import lombok.NoArgsConstructor;
 public class UrlResponse {
 
     private Long id;
-
     private String originalUrl;
-
     private String shortCode;
-
     private String shortUrl;
-
     private Long clickCount;
 }
