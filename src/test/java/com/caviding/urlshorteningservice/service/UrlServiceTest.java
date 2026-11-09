@@ -52,9 +52,9 @@ public class UrlServiceTest {
 
     @Test
     void should_createUrl_returnUrlResponse(){
+        when(shortCodeGenerator.generate()).thenReturn("123456");
         when(urlRepository.existsByShortCode(anyString())).thenReturn(false);
         when(urlRepository.save(any(Url.class))).thenReturn(testUrl);
-        when(shortCodeGenerator.generate()).thenReturn("123456");
 
         UrlResponse response = urlService.createUrl(testRequest);
 
